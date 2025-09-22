@@ -6,6 +6,26 @@ export class ObsidianAPIClient {
   private client: AxiosInstance;
   private config: Config;
 
+  /**
+   * 自定义路径编码函数，只编码真正必要的字符
+   * 保留 @ 符号和其他常用符号不被编码
+   */
+  private encodePathComponent(str: string): string {
+    // 只编码真正需要编码的字符：空格、路径分隔符、查询参数分隔符等
+    return str.replace(/[\s\/?#\[\]%]/g, (match) => {
+      switch (match) {
+        case ' ': return '%20';
+        case '/': return '%2F';
+        case '?': return '%3F';
+        case '#': return '%23';
+        case '[': return '%5B';
+        case ']': return '%5D';
+        case '%': return '%25';
+        default: return match;
+      }
+    });
+  }
+
   constructor(config: Config) {
     this.config = config;
     const protocol = config.secure ? 'https' : 'http';
@@ -75,28 +95,28 @@ export class ObsidianAPIClient {
   // Vault file operations
   async getFile(filename: string, asJson: boolean = false): Promise<string | NoteJson> {
     const headers = asJson ? { 'Accept': 'application/vnd.olrapi.note+json' } : {};
-    const response = await this.client.get(`/vault/${encodeURIComponent(filename)}`, { headers });
+    const response = await this.client.get(`/vault/${this.encodePathComponent(filename)}`, { headers });
     return response.data;
   }
 
   async createOrUpdateFile(filename: string, content: string): Promise<void> {
-    await this.client.put(`/vault/${encodeURIComponent(filename)}`, content, {
+    await this.client.put(`/vault/${this.encodePathComponent(filename)}`, content, {
       headers: { 'Content-Type': 'text/markdown' }
     });
   }
 
   async appendToFile(filename: string, content: string): Promise<void> {
-    await this.client.post(`/vault/${encodeURIComponent(filename)}`, content, {
+    await this.client.post(`/vault/${this.encodePathComponent(filename)}`, content, {
       headers: { 'Content-Type': 'text/markdown' }
     });
   }
 
   async deleteFile(filename: string): Promise<void> {
-    await this.client.delete(`/vault/${encodeURIComponent(filename)}`);
+    await this.client.delete(`/vault/${this.encodePathComponent(filename)}`);
   }
 
   async patchFile(filename: string, operation: 'append' | 'replace', targetType: 'heading' | 'frontmatter' | 'block', target: string, content: string): Promise<void> {
-    await this.client.patch(`/vault/${encodeURIComponent(filename)}`, content, {
+    await this.client.patch(`/vault/${this.encodePathComponent(filename)}`, content, {
       headers: {
         'Operation': operation,
         'Target-Type': targetType,
@@ -108,7 +128,7 @@ export class ObsidianAPIClient {
 
   // Directory operations
   async listDirectory(path: string = ''): Promise<FileListItem[]> {
-    const url = path ? `/vault/${encodeURIComponent(path)}/` : '/vault/';
+    const url = path ? `/vault/${this.encodePathComponent(path)}/` : '/vault/';
     const response = await this.client.get(url);
     return response.data.files || [];
   }
@@ -142,12 +162,12 @@ export class ObsidianAPIClient {
   }
 
   async executeCommand(commandId: string): Promise<void> {
-    await this.client.post(`/commands/${encodeURIComponent(commandId)}/`);
+    await this.client.post(`/commands/${this.encodePathComponent(commandId)}/`);
   }
 
   // File opening
   async openFile(filename: string, newLeaf: boolean = false): Promise<void> {
-    await this.client.post(`/open/${encodeURIComponent(filename)}`, null, {
+    await this.client.post(`/open/${this.encodePathComponent(filename)}`, null, {
       params: { newLeaf }
     });
   }

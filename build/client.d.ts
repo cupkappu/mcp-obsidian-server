@@ -2,6 +2,11 @@ import { Config, NoteJson, FileListItem, SearchResult, Command } from './types.j
 export declare class ObsidianAPIClient {
     private client;
     private config;
+    /**
+     * 自定义路径编码函数，只编码真正必要的字符
+     * 保留 @ 符号和其他常用符号不被编码
+     */
+    private encodePathComponent;
     constructor(config: Config);
     getServerInfo(): Promise<any>;
     getCertificate(): Promise<string>;
