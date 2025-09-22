@@ -4,8 +4,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build output
-build/
+# Build output (keep build/ for npm package)
+# build/
 dist/
 
 # Environment variables
