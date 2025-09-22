@@ -14,6 +14,9 @@ class ObsidianMCPServer {
         }, {
             capabilities: {
                 tools: {},
+                roots: {
+                    listChanged: false
+                }
             },
         });
         this.setupToolHandlers();
