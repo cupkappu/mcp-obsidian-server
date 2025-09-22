@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { CallToolRequestSchema, ErrorCode, ListRootsRequestSchema, ListToolsRequestSchema, McpError, } from '@modelcontextprotocol/sdk/types.js';
+import { CallToolRequestSchema, ErrorCode, ListToolsRequestSchema, McpError, } from '@modelcontextprotocol/sdk/types.js';
 import { ObsidianAPIClient } from './client.js';
 import { ConfigSchema } from './types.js';
 class ObsidianMCPServer {
@@ -17,20 +17,7 @@ class ObsidianMCPServer {
             },
         });
         this.setupToolHandlers();
-        this.setupRootsHandler();
         this.setupErrorHandling();
-    }
-    setupRootsHandler() {
-        this.server.setRequestHandler(ListRootsRequestSchema, async () => {
-            return {
-                roots: [
-                    {
-                        uri: "obsidian://vault",
-                        name: "Obsidian Vault"
-                    }
-                ]
-            };
-        });
     }
     setupErrorHandling() {
         this.server.onerror = (error) => console.error('[MCP Error]', error);
@@ -534,4 +521,4 @@ class ObsidianMCPServer {
 }
 const server = new ObsidianMCPServer();
 server.run().catch(console.error);
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index_simple.js.map

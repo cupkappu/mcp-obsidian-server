@@ -23,13 +23,13 @@
 ### 方式1: 通过npx直接使用（推荐）
 
 ```bash
-npx @cupkappu/mcp-obsidian-server
+npx github:cupkappu/mcp-obsidian-server
 ```
 
 ### 方式2: 全局安装
 
 ```bash
-npm install -g @cupkappu/mcp-obsidian-server
+npm install -g github:cupkappu/mcp-obsidian-server
 mcp-obsidian-server
 ```
 
@@ -98,7 +98,7 @@ OBSIDIAN_API_KEY="your-api-key" npm start
   "mcpServers": {
     "obsidian": {
       "command": "npx",
-      "args": ["@cupkappu/mcp-obsidian-server"],
+      "args": ["github:cupkappu/mcp-obsidian-server"],
       "env": {
         "OBSIDIAN_API_KEY": "your-api-key-here",
         "OBSIDIAN_HOST": "127.0.0.1",

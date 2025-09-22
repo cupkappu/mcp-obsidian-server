@@ -5,7 +5,6 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import {
   CallToolRequestSchema,
   ErrorCode,
-  ListRootsRequestSchema,
   ListToolsRequestSchema,
   McpError,
 } from '@modelcontextprotocol/sdk/types.js';
@@ -30,21 +29,7 @@ class ObsidianMCPServer {
     );
 
     this.setupToolHandlers();
-    this.setupRootsHandler();
     this.setupErrorHandling();
-  }
-
-  private setupRootsHandler(): void {
-    this.server.setRequestHandler(ListRootsRequestSchema, async () => {
-      return {
-        roots: [
-          {
-            uri: "obsidian://vault",
-            name: "Obsidian Vault"
-          }
-        ]
-      };
-    });
   }
 
   private setupErrorHandling(): void {
