@@ -62,20 +62,6 @@ class ObsidianMCPServer {
                     },
                     // Active file tools
                     {
-                        name: 'get_active_file',
-                        description: 'Get the content of the currently active file in Obsidian',
-                        inputSchema: {
-                            type: 'object',
-                            properties: {
-                                asJson: {
-                                    type: 'boolean',
-                                    description: 'Return structured JSON with metadata instead of raw markdown',
-                                    default: false,
-                                },
-                            },
-                        },
-                    },
-                    {
                         name: 'update_active_file',
                         description: 'Replace the content of the currently active file',
                         inputSchema: {
@@ -312,17 +298,6 @@ class ObsidianMCPServer {
                         };
                     }
                     // Active file tools
-                    case 'get_active_file': {
-                        const content = await client.getActiveFile(args?.asJson || false);
-                        return {
-                            content: [
-                                {
-                                    type: 'text',
-                                    text: typeof content === 'string' ? content : JSON.stringify(content, null, 2),
-                                },
-                            ],
-                        };
-                    }
                     case 'update_active_file': {
                         if (!args?.content)
                             throw new McpError(ErrorCode.InvalidParams, 'Content is required');

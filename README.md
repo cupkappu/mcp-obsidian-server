@@ -151,7 +151,6 @@ MCP服务器提供以下工具：
 - `get_server_info` - 获取服务器信息和认证状态
 
 ### 活动文件操作
-- `get_active_file` - 获取当前活动文件内容
 - `update_active_file` - 更新当前活动文件
 - `append_to_active_file` - 向当前活动文件追加内容
 

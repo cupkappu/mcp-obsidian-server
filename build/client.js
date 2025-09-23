@@ -32,8 +32,32 @@ export class ObsidianAPIClient {
                 'Authorization': `Bearer ${config.apiKey}`,
                 'Content-Type': 'application/json',
             },
+            // 设置合理的超时时间
+            timeout: 10000, // 10秒超时
             // For self-signed certificates in HTTPS mode
             httpsAgent: config.secure ? new https.Agent({ rejectUnauthorized: false }) : undefined,
+        });
+        // 添加响应拦截器来改善错误处理
+        this.client.interceptors.response.use((response) => response, (error) => {
+            if (error.code === 'ECONNABORTED') {
+                error.message = 'Request timed out. Please check if Obsidian is running and the Local REST API plugin is enabled.';
+            }
+            else if (error.response?.status === 404) {
+                // 改善404错误信息
+                if (error.config?.url?.includes('/active/')) {
+                    error.message = 'No active file found. Please open a file in Obsidian first.';
+                }
+                else {
+                    error.message = `File not found: ${error.config?.url || 'Unknown file'}`;
+                }
+            }
+            else if (error.response?.status === 401) {
+                error.message = 'Authentication failed. Please check your API key.';
+            }
+            else if (error.code === 'ECONNREFUSED') {
+                error.message = 'Cannot connect to Obsidian. Please ensure Obsidian is running and the Local REST API plugin is enabled.';
+            }
+            return Promise.reject(error);
         });
     }
     // System endpoints
