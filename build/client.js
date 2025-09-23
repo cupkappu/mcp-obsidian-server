@@ -118,7 +118,7 @@ export class ObsidianAPIClient {
         const response = await this.client.post('/search/simple/', null, {
             params: { query, contextLength }
         });
-        return response.data.results || [];
+        return response.data || [];
     }
     async searchDataview(query) {
         const response = await this.client.post('/search/', query, {
